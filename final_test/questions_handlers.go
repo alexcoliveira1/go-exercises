@@ -7,10 +7,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-const (
-	responseHeaderJSON = "application/json; charset=utf-8"
-)
-
 // Get one question by its ID
 func getQuestionHandler(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]

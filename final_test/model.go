@@ -1,13 +1,7 @@
 package main
 
-type User struct {
-	Email     string     `json:"email"`
-	Questions []Question `json:"questions"`
-}
-
 type Answer struct {
-	ID            string   `json:"id"`
-	Body          string   `json:"body"`
+	Content       string   `json:"content"`
 	UserEmail     string   `json:"userEmail"`
 	Votes         int      `json:"votes"`
 	UpvotesList   []string `json:"-"`

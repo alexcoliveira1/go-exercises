@@ -33,6 +33,12 @@ func (m QuestionIdEmptyError) Error() string {
 	return "ID field cant be empty"
 }
 
+type QuestionAlreadyAnsweredError struct{}
+
+func (m QuestionAlreadyAnsweredError) Error() string {
+	return "Question already has an answer. To change answer remove the current one and add a new one afterwards. To modify content run an update."
+}
+
 // Get one question by its ID
 func getQuestionByID(id string) (Question, error) {
 	questionsLock.RLock()
@@ -150,4 +156,28 @@ func deleteQuestion(id string) (bool, error) {
 	questions = append(questions[:foundIndex], questions[foundIndex+1:]...)
 
 	return true, nil
+}
+
+func fillAnswerOptionalFields(newAnswer *Answer) {
+	newAnswer.Votes = 0
+	newAnswer.DownvotesList = make([]string, 0)
+	newAnswer.UpvotesList = make([]string, 0)
+}
+
+// Answer Question
+func answerQuestion(questionID string, answer Answer) (Question, error) {
+	q, err := getQuestionByID(questionID)
+
+	if err != nil {
+		return Question{}, err
+	}
+
+	if q.Answer != nil {
+		return Question{}, QuestionAlreadyAnsweredError{}
+	}
+
+	fillAnswerOptionalFields(&answer)
+	q.Answer = &answer
+
+	return updateQuestion(q)
 }
