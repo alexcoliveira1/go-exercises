@@ -11,8 +11,8 @@ func main() {
 	r.HandleFunc("/questions", getAllQuestionsHandler).Methods("GET")
 	r.HandleFunc("/questions", addQuestionHandler).Methods("POST")
 	r.HandleFunc("/questions/{id}", getQuestionHandler).Methods("GET")
-	// r.HandleFunc("/products/{id}", updateProductHandler).Methods("PUT")
-	// r.HandleFunc("/products/{id}", removeProductHandler).Methods("DELETE")
+	r.HandleFunc("/questions/{id}", updateQuestionHandler).Methods("PUT")
+	r.HandleFunc("/questions/{id}", removeQuestionHandler).Methods("DELETE")
 	http.Handle("/", r)
 	http.ListenAndServe(":8090", nil)
 }

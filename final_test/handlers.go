@@ -49,12 +49,12 @@ func getAllQuestionsHandler(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-func getQuestionFromRequestBody(r *http.Request) (*Question, error) {
+func getQuestionFromRequestBody(r *http.Request) (Question, error) {
 	var q Question
 	if err := json.NewDecoder(r.Body).Decode(&q); err != nil {
-		return nil, err
+		return q, err
 	}
-	return &q, nil
+	return q, nil
 }
 
 // Create a new question
@@ -65,10 +65,13 @@ func addQuestionHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	addQuestion(*q)
+	newQuestion, err := addQuestion(q)
 
 	w.Header().Set("Content-Type", responseHeaderJSON)
-	w.Write([]byte("{\"success\":true}"))
+	if err := json.NewEncoder(w).Encode(newQuestion); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 }
 
 // Get all the questions created by a given user
@@ -83,4 +86,43 @@ func getUserQuestionsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // Update an existing question (the statement and/or the answer)
+func updateQuestionHandler(w http.ResponseWriter, r *http.Request) {
+	id := mux.Vars(r)["id"]
+	newQ, err := getQuestionFromRequestBody(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	if newQ.ID != "" && newQ.ID != id {
+		http.Error(w, "ID sent in URL does not match the ID on the request body", http.StatusBadRequest)
+		return
+	}
+
+	newQ.ID = id
+
+	_, err = updateQuestion(newQ)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", responseHeaderJSON)
+	w.Write([]byte("{\"success\":true}"))
+}
+
 // Delete an existing question
+func removeQuestionHandler(w http.ResponseWriter, r *http.Request) {
+	id := mux.Vars(r)["id"]
+
+	_, err := deleteQuestion(id)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", responseHeaderJSON)
+	w.Write([]byte("{\"success\":true}"))
+}

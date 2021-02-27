@@ -74,6 +74,18 @@ func (m NewQuestionWithAnswerError) Error() string {
 	return "A new Question must not be created with an answer"
 }
 
+func fillQuestionOptionalFields(newQuestion *Question) {
+	newQuestion.Votes = 0
+	newQuestion.DownvotesList = make([]string, 0)
+	newQuestion.UpvotesList = make([]string, 0)
+}
+
+func fillNewQuestionWithOldFields(newQuestion *Question, oldQuestion *Question) {
+	newQuestion.Votes = oldQuestion.Votes
+	newQuestion.DownvotesList = oldQuestion.DownvotesList
+	newQuestion.UpvotesList = oldQuestion.UpvotesList
+}
+
 // Create a new question
 func addQuestion(newQuestion Question) (*Question, error) {
 	if newQuestion.ID != "" {
@@ -83,13 +95,7 @@ func addQuestion(newQuestion Question) (*Question, error) {
 		return nil, NewQuestionWithAnswerError{}
 	}
 	newQuestion.ID = uuid.New().String()
-	newQuestion.Votes = 0
-	if newQuestion.DownvotesList == nil {
-		newQuestion.DownvotesList = make([]string, 0)
-	}
-	if newQuestion.UpvotesList == nil {
-		newQuestion.UpvotesList = make([]string, 0)
-	}
+	fillQuestionOptionalFields(&newQuestion)
 	questions = append(questions, newQuestion)
 	return &newQuestion, nil
 }
@@ -116,6 +122,8 @@ func updateQuestion(updatedQuestion Question) (*Question, error) {
 	if foundIndex == -1 {
 		return nil, QuestionNotFoundError{}
 	}
+
+	fillNewQuestionWithOldFields(&updatedQuestion, &questions[foundIndex])
 
 	questions[foundIndex] = updatedQuestion
 
