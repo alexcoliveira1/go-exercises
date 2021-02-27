@@ -17,10 +17,10 @@ func getAnswerFromRequestBody(r *http.Request) (Answer, error) {
 
 // Get one question by its ID
 func addAnswerHandler(w http.ResponseWriter, r *http.Request) {
-	questionID := mux.Vars(r)["questionID"]
+	questionId := mux.Vars(r)["questionId"]
 	a, err := getAnswerFromRequestBody(r)
 
-	q, err := answerQuestion(questionID, a)
+	q, err := answerQuestion(questionId, a)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)

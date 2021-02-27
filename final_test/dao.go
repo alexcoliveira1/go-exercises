@@ -164,9 +164,15 @@ func fillAnswerOptionalFields(newAnswer *Answer) {
 	newAnswer.UpvotesList = make([]string, 0)
 }
 
+func fillNewAnswerWithOldFields(newAnswer *Answer, oldAnswer *Answer) {
+	newAnswer.Votes = oldAnswer.Votes
+	newAnswer.DownvotesList = oldAnswer.DownvotesList
+	newAnswer.UpvotesList = oldAnswer.UpvotesList
+}
+
 // Answer Question
-func answerQuestion(questionID string, answer Answer) (Question, error) {
-	q, err := getQuestionByID(questionID)
+func answerQuestion(questionId string, answer Answer) (Question, error) {
+	q, err := getQuestionByID(questionId)
 
 	if err != nil {
 		return Question{}, err

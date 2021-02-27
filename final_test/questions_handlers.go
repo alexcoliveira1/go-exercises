@@ -9,7 +9,7 @@ import (
 
 // Get one question by its ID
 func getQuestionHandler(w http.ResponseWriter, r *http.Request) {
-	id := mux.Vars(r)["id"]
+	id := mux.Vars(r)["questionId"]
 
 	q, err := getQuestionByID(id)
 
@@ -83,7 +83,7 @@ func getUserQuestionsHandler(w http.ResponseWriter, r *http.Request) {
 
 // Update an existing question (the statement and/or the answer)
 func updateQuestionHandler(w http.ResponseWriter, r *http.Request) {
-	id := mux.Vars(r)["id"]
+	id := mux.Vars(r)["questionId"]
 	newQ, err := getQuestionFromRequestBody(r)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -110,7 +110,7 @@ func updateQuestionHandler(w http.ResponseWriter, r *http.Request) {
 
 // Delete an existing question
 func removeQuestionHandler(w http.ResponseWriter, r *http.Request) {
-	id := mux.Vars(r)["id"]
+	id := mux.Vars(r)["questionId"]
 
 	_, err := deleteQuestion(id)
 
