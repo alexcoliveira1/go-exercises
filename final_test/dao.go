@@ -37,13 +37,13 @@ func (m QuestionNotFoundError) Error() string {
 }
 
 // Get one question by its ID
-func getQuestionByID(id string) (*Question, error) {
+func getQuestionByID(id string) (Question, error) {
 	for _, q := range questions {
 		if q.ID == id {
-			return &q, nil
+			return q, nil
 		}
 	}
-	return nil, QuestionNotFoundError{}
+	return Question{}, QuestionNotFoundError{}
 }
 
 // Get a list of all questions
@@ -87,17 +87,17 @@ func fillNewQuestionWithOldFields(newQuestion *Question, oldQuestion *Question) 
 }
 
 // Create a new question
-func addQuestion(newQuestion Question) (*Question, error) {
+func addQuestion(newQuestion Question) (Question, error) {
 	if newQuestion.ID != "" {
-		return nil, QuestionIdNotEmptyError{}
+		return Question{}, QuestionIdNotEmptyError{}
 	}
 	if newQuestion.Answer != nil {
-		return nil, NewQuestionWithAnswerError{}
+		return Question{}, NewQuestionWithAnswerError{}
 	}
 	newQuestion.ID = uuid.New().String()
 	fillQuestionOptionalFields(&newQuestion)
 	questions = append(questions, newQuestion)
-	return &newQuestion, nil
+	return newQuestion, nil
 }
 
 type QuestionIdEmptyError struct{}
@@ -107,9 +107,9 @@ func (m QuestionIdEmptyError) Error() string {
 }
 
 // Update an existing question (the statement and/or the answer)
-func updateQuestion(updatedQuestion Question) (*Question, error) {
+func updateQuestion(updatedQuestion Question) (Question, error) {
 	if updatedQuestion.ID == "" {
-		return nil, QuestionIdEmptyError{}
+		return Question{}, QuestionIdEmptyError{}
 	}
 
 	foundIndex := -1
@@ -120,14 +120,14 @@ func updateQuestion(updatedQuestion Question) (*Question, error) {
 	}
 
 	if foundIndex == -1 {
-		return nil, QuestionNotFoundError{}
+		return Question{}, QuestionNotFoundError{}
 	}
 
 	fillNewQuestionWithOldFields(&updatedQuestion, &questions[foundIndex])
 
 	questions[foundIndex] = updatedQuestion
 
-	return &questions[foundIndex], nil
+	return questions[foundIndex], nil
 }
 
 // Delete an existing question

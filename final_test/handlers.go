@@ -23,7 +23,7 @@ func getQuestionHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", responseHeaderJSON)
-	if err := json.NewEncoder(w).Encode(q); err != nil {
+	if err := json.NewEncoder(w).Encode(&q); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -68,7 +68,7 @@ func addQuestionHandler(w http.ResponseWriter, r *http.Request) {
 	newQuestion, err := addQuestion(q)
 
 	w.Header().Set("Content-Type", responseHeaderJSON)
-	if err := json.NewEncoder(w).Encode(newQuestion); err != nil {
+	if err := json.NewEncoder(w).Encode(&newQuestion); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
