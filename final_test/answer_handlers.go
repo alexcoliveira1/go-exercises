@@ -7,18 +7,12 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func getAnswerFromRequestBody(r *http.Request) (Answer, error) {
-	var a Answer
-	if err := json.NewDecoder(r.Body).Decode(&a); err != nil {
-		return a, err
-	}
-	return a, nil
-}
-
 // Get one question by its ID
 func addAnswerHandler(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
 	questionId := mux.Vars(r)["questionId"]
-	a, err := getAnswerFromRequestBody(r)
+
+	a := ctx.Value("answer").(Answer)
 
 	q, err := answerQuestion(questionId, a)
 

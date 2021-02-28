@@ -55,13 +55,15 @@ func getQuestionFromRequestBody(r *http.Request) (Question, error) {
 
 // Create a new question
 func addQuestionHandler(w http.ResponseWriter, r *http.Request) {
-	q, err := getQuestionFromRequestBody(r)
+	ctx := r.Context()
+	q := ctx.Value("question").(Question)
+
+	newQuestion, err := addQuestion(q)
+
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-
-	newQuestion, err := addQuestion(q)
 
 	w.Header().Set("Content-Type", responseHeaderJSON)
 	if err := json.NewEncoder(w).Encode(&newQuestion); err != nil {
@@ -83,12 +85,9 @@ func getUserQuestionsHandler(w http.ResponseWriter, r *http.Request) {
 
 // Update an existing question (the statement and/or the answer)
 func updateQuestionHandler(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	newQ := ctx.Value("question").(Question)
 	id := mux.Vars(r)["questionId"]
-	newQ, err := getQuestionFromRequestBody(r)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
 
 	if newQ.ID != "" && newQ.ID != id {
 		http.Error(w, "ID sent in URL does not match the ID on the request body", http.StatusBadRequest)
@@ -97,7 +96,7 @@ func updateQuestionHandler(w http.ResponseWriter, r *http.Request) {
 
 	newQ.ID = id
 
-	_, err = updateQuestion(newQ)
+	_, err := updateQuestion(newQ)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
