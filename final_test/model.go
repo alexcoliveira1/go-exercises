@@ -1,4 +1,4 @@
-package main
+package answer
 
 type Answer struct {
 	Content       string   `json:"content"`

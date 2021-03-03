@@ -1,4 +1,4 @@
-package main
+package answer
 
 import (
 	"encoding/json"
@@ -21,7 +21,6 @@ func addAnswerHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", responseHeaderJSON)
 	if err := json.NewEncoder(w).Encode(&q); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return

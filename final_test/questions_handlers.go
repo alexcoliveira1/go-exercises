@@ -1,4 +1,4 @@
-package main
+package answer
 
 import (
 	"encoding/json"
@@ -18,7 +18,6 @@ func getQuestionHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", responseHeaderJSON)
 	if err := json.NewEncoder(w).Encode(&q); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -29,8 +28,6 @@ func getQuestionHandler(w http.ResponseWriter, r *http.Request) {
 func getAllQuestionsHandler(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
 	userEmail := query.Get("user")
-
-	w.Header().Set("Content-Type", responseHeaderJSON)
 
 	if userEmail != "" {
 		if err := json.NewEncoder(w).Encode(getUserQuestions(userEmail)); err != nil {
@@ -65,7 +62,6 @@ func addQuestionHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", responseHeaderJSON)
 	if err := json.NewEncoder(w).Encode(&newQuestion); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -76,7 +72,6 @@ func addQuestionHandler(w http.ResponseWriter, r *http.Request) {
 func getUserQuestionsHandler(w http.ResponseWriter, r *http.Request) {
 	user := mux.Vars(r)["user"]
 
-	w.Header().Set("Content-Type", responseHeaderJSON)
 	if err := json.NewEncoder(w).Encode(getUserQuestions(user)); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -103,7 +98,6 @@ func updateQuestionHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", responseHeaderJSON)
 	w.Write([]byte("{\"success\":true}"))
 }
 
@@ -118,6 +112,5 @@ func removeQuestionHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", responseHeaderJSON)
 	w.Write([]byte("{\"success\":true}"))
 }
