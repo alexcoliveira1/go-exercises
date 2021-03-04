@@ -134,7 +134,7 @@ func updateQuestion(updatedQuestion Question) (Question, error) {
 }
 
 // Delete an existing question
-func deleteQuestion(id string) (bool, error) {
+func removeQuestion(id string) (bool, error) {
 	if id == "" {
 		return false, QuestionIdEmptyError{}
 	}

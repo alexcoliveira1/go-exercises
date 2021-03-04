@@ -3,23 +3,19 @@ package answer
 import (
 	"context"
 	"testing"
-	"time"
 )
 
-func TestGetHello(t *testing.T) {
+func TestGetQuestions(t *testing.T) {
 	srv, ctx := setup()
-	d, err := srv.GetHello(ctx)
+	q, err := srv.GetQuestions(ctx)
 	if err != nil {
 		t.Errorf("Error: %s", err)
 	}
 
-	timeNow := time.Now()
-	today := timeNow.Format("02/01/2006")
-
 	// testing today's date
-	ok := today == d
+	ok := 0 == len(q)
 	if !ok {
-		t.Errorf("expected dates to be equal")
+		t.Errorf("expected questions to be empty")
 	}
 }
 

@@ -9,7 +9,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	answer "github.com/alexcoliveira1/go-exercises/final-test"
+	answer "github.com/alexcoliveira1/go-exercises/final_test"
 )
 
 func main() {
@@ -26,7 +26,12 @@ func main() {
 
 	// mapping endpoints
 	endpoints := answer.Endpoints{
-		GetHelloEndpoint: answer.MakeGetHelloEndpoint(srv),
+		GetQuestionsEndpoint:   answer.MakeGetQuestionsEndpoint(srv),
+		GetQuestionEndpoint:    answer.MakeGetQuestionEndpoint(srv),
+		AddQuestionEndpoint:    answer.MakeAddQuestionEndpoint(srv),
+		UpdateQuestionEndpoint: answer.MakeUpdateQuestionEndpoint(srv),
+		RemoveQuestionEndpoint: answer.MakeRemoveQuestionEndpoint(srv),
+		AddAnswerEndpoint:      answer.MakeAddAnswerEndpoint(srv),
 	}
 
 	// HTTP transport
