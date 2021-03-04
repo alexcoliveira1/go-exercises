@@ -16,6 +16,18 @@ type Endpoints struct {
 	AddAnswerEndpoint      endpoint.Endpoint
 }
 
+// mapping endpoints
+func MakeAllEndpoints(srv Service) Endpoints {
+	return Endpoints{
+		GetQuestionsEndpoint:   MakeGetQuestionsEndpoint(srv),
+		GetQuestionEndpoint:    MakeGetQuestionEndpoint(srv),
+		AddQuestionEndpoint:    MakeAddQuestionEndpoint(srv),
+		UpdateQuestionEndpoint: MakeUpdateQuestionEndpoint(srv),
+		RemoveQuestionEndpoint: MakeRemoveQuestionEndpoint(srv),
+		AddAnswerEndpoint:      MakeAddAnswerEndpoint(srv),
+	}
+}
+
 type BadRequestError struct{}
 
 func (e BadRequestError) Error() string {

@@ -15,7 +15,8 @@ import (
 func main() {
 	ctx := context.Background()
 	// our answer service
-	srv := answer.NewService()
+	svc := answer.NewService()
+	endpoints := answer.MakeAllEndpoints(svc)
 
 	errChan := make(chan error)
 	go func() {
@@ -23,16 +24,6 @@ func main() {
 		signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
 		errChan <- fmt.Errorf("%s", <-c)
 	}()
-
-	// mapping endpoints
-	endpoints := answer.Endpoints{
-		GetQuestionsEndpoint:   answer.MakeGetQuestionsEndpoint(srv),
-		GetQuestionEndpoint:    answer.MakeGetQuestionEndpoint(srv),
-		AddQuestionEndpoint:    answer.MakeAddQuestionEndpoint(srv),
-		UpdateQuestionEndpoint: answer.MakeUpdateQuestionEndpoint(srv),
-		RemoveQuestionEndpoint: answer.MakeRemoveQuestionEndpoint(srv),
-		AddAnswerEndpoint:      answer.MakeAddAnswerEndpoint(srv),
-	}
 
 	// HTTP transport
 	go func() {
