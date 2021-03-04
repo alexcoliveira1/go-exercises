@@ -9,7 +9,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	answer "github.com/alexcoliveira1/go-exercises/final_test"
+	answer "github.com/alexcoliveira1/go-exercises/answer/pkg"
 )
 
 func main() {
@@ -27,8 +27,8 @@ func main() {
 
 	// HTTP transport
 	go func() {
-		log.Println("answer is listening on port: 8090")
-		errChan <- http.ListenAndServe(":8090", answer.NewHTTPServer(ctx, endpoints))
+		log.Println("answer is listening on port: 8080")
+		errChan <- http.ListenAndServe(":8080", answer.NewHTTPServer(ctx, endpoints))
 	}()
 
 	log.Fatalln(<-errChan)
